@@ -529,4 +529,93 @@ In this example:
 
 To dive deeper into `useCallback` and how it compares to `useMemo`, check out the [useCallback chapter](#) in this guide.
 
+## Custom Hooks
+
+### Overview
+
+Hooks are reusable functions that allow you to encapsulate logic used across multiple components. When you find yourself repeating the same component logic in different parts of your application, it’s time to consider extracting that logic into a custom Hook.
+
+### Creating a Custom Hook
+
+To demonstrate, we’ve created a custom Hook called `useFetch`. This Hook handles all the logic required to fetch data from an API.
+
+### Example: `useFetch`
+
+1. **Create `useFetch.js`:**
+
+   We create a new file called `useFetch.js` containing the `useFetch` function. This function encapsulates the logic for fetching data from a given URL.
+
+   ```javascript
+   import { useState, useEffect } from 'react';
+
+   function useFetch(url) {
+       const [data, setData] = useState(null);
+       const [loading, setLoading] = useState(true);
+       const [error, setError] = useState(null);
+
+       useEffect(() => {
+           const fetchData = async () => {
+               try {
+                   const response = await fetch(url);
+                   if (!response.ok) {
+                       throw new Error('Network response was not ok');
+                   }
+                   const result = await response.json();
+                   setData(result);
+               } catch (err) {
+                   setError(err);
+               } finally {
+                   setLoading(false);
+               }
+           };
+
+           fetchData();
+       }, [url]);
+
+       return { data, loading, error };
+   }
+
+   export default useFetch;
+   ```
+
+   In this example:
+   - **`url` Parameter:** We removed the hard-coded URL and replaced it with a `url` variable that can be passed to the custom Hook.
+   - **Returning Data:** The Hook returns an object containing the `data`, `loading` state, and `error` so they can be used in the component.
+
+2. **Using the Custom Hook in `index.js`:**
+
+   Now, we can import and use our `useFetch` Hook in any component like any other React Hook.
+
+   ```javascript
+   import React from 'react';
+   import useFetch from './useFetch';
+
+   function App() {
+       const { data, loading, error } = useFetch('https://api.example.com/data');
+
+       if (loading) return <p>Loading...</p>;
+       if (error) return <p>Error: {error.message}</p>;
+
+       return (
+           <div>
+               <h1>Fetched Data:</h1>
+               <pre>{JSON.stringify(data, null, 2)}</pre>
+           </div>
+       );
+   }
+
+   export default App;
+   ```
+
+   In this example:
+   - We import the `useFetch` Hook and pass the URL of the data we want to fetch.
+   - The Hook handles the fetch operation, and we can directly use the returned `data`, `loading`, and `error` states in our component.
+
+### Reusability
+
+By encapsulating the fetch logic in a custom Hook, we can now easily reuse `useFetch` across different components to fetch data from any URL, ensuring consistency and reducing code duplication.
+
+### Naming Convention
+
+Custom Hooks follow a naming convention where the Hook name starts with "use". For example, `useFetch`, `useAuth`, `useForm`, etc. This convention helps to differentiate Hooks from regular functions and indicates that the function uses React's hook capabilities internally.
 
