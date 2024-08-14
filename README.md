@@ -51,6 +51,73 @@ function FavoriteColor() {
 }
 ```
 
-In this example, `color` is the current state, and `setColor` is the function used to update the state. The initial state is set to an empty string.
+In this example, `color` is the current state, and `setColor` is the function used to update the state. The initial state is set to an empty string
 
 ---
+
+# React `useEffect` Hook Overview
+
+## Introduction
+
+The `useEffect` Hook is a powerful feature in React that allows you to perform side effects in your function components. Side effects can include tasks such as fetching data, directly manipulating the DOM, or setting up timers.
+
+## What is a Side Effect?
+
+Side effects are operations that affect something outside the scope of the function being executed. In the context of React, common side effects include:
+
+- **Fetching data** from an API
+- **Updating the DOM** directly (e.g., manipulating an element's style or attributes)
+- **Setting up timers** or intervals
+
+## How to Use `useEffect`
+
+The `useEffect` Hook takes two arguments:
+
+```javascript
+useEffect(<function>, <dependency>)
+```
+
+- **First Argument**: A function that contains the side effect logic.
+- **Second Argument (Optional)**: An array of dependencies that determines when the effect should run.
+
+### Basic Example
+
+Here’s an example of using `useEffect` to update a counter every second:
+
+```javascript
+useEffect(() => {
+  setTimeout(() => {
+    setCount((count) => count + 1);
+  }, 1000);
+}, []);
+```
+
+In this example, the effect runs once after the initial render because the dependency array is empty (`[]`).
+
+## Effect Cleanup
+
+Some effects require cleanup to avoid issues such as memory leaks. Common examples include:
+
+- **Timeouts**
+- **Subscriptions**
+- **Event listeners**
+
+To perform cleanup, return a function from within the `useEffect` Hook. This function will be executed when the component unmounts or before the effect runs again.
+
+### Cleanup Example
+
+Here’s an example of using `useEffect` with cleanup:
+
+```javascript
+useEffect(() => {
+  let timer = setTimeout(() => {
+    setCount((count) => count + 1);
+  }, 1000);
+
+  return () => clearTimeout(timer);
+}, []);
+```
+
+In this example, the cleanup function clears the timeout to ensure that it doesn’t continue running unnecessarily.
+
+
