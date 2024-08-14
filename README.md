@@ -470,3 +470,63 @@ In this updated example, the `addTodo` function is now wrapped in `useCallback`,
 
 The `useCallback` Hook is an essential tool for optimizing React applications by preventing unnecessary re-renders and solving issues related to referential equality. By using `useCallback`, you can ensure that functions are only recreated when necessary, leading to more efficient and performant components.
 
+## Understanding `useMemo` and `useCallback` Hooks
+
+### Overview
+
+Both `useMemo` and `useCallback` are React hooks used to optimize performance by preventing unnecessary computations or re-renders. While they serve similar purposes, the key difference lies in what they return:
+
+- **`useMemo`:** Returns a memoized value.
+- **`useCallback`:** Returns a memoized function.
+
+### `useMemo` Hook
+
+The `useMemo` Hook returns a memoized value, effectively caching the result of an expensive calculation so that it does not need to be recalculated on every render. The hook will only re-run the memoized function when one of its dependencies changes, which can significantly improve performance in certain scenarios.
+
+#### When to Use `useMemo`
+
+Use `useMemo` to optimize performance in cases where you have expensive calculations that shouldn't be recalculated on every render. By memoizing the calculation, you ensure that it only runs when necessary, based on its dependencies.
+
+### Example Usage of `useMemo`
+
+```javascript
+import React, { useState, useMemo } from 'react';
+
+function ExpensiveCalculationComponent({ todos }) {
+    const [count, setCount] = useState(0);
+
+    const expensiveCalculation = (num) => {
+        console.log('Calculating...');
+        for (let i = 0; i < 1000000000; i++) {
+            num += 1;
+        }
+        return num;
+    };
+
+    const memoizedValue = useMemo(() => expensiveCalculation(count), [count]);
+
+    return (
+        <div>
+            <h2>Memoized Value: {memoizedValue}</h2>
+            <button onClick={() => setCount(count + 1)}>Increment Count</button>
+            <div>
+                {todos.map(todo => (
+                    <p key={todo.id}>{todo.text}</p>
+                ))}
+            </div>
+        </div>
+    );
+}
+```
+
+In this example:
+
+- The `expensiveCalculation` function is wrapped with `useMemo`.
+- It will only execute when the `count` value changes.
+- Adding or removing todos will not trigger the recalculation of `expensiveCalculation`, which helps improve the component's performance.
+
+### Additional Learning
+
+To dive deeper into `useCallback` and how it compares to `useMemo`, check out the [useCallback chapter](#) in this guide.
+
+
