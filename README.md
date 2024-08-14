@@ -268,5 +268,82 @@ export default TextInputWithFocusButton;
 
 In this example, clicking the button focuses the input field, demonstrating how `useRef` can be used to interact with the DOM directly.
 
+# `useReducer` Hook
 
+## Introduction
+
+The `useReducer` Hook is a powerful alternative to the `useState` Hook in React, particularly when managing complex state logic. It provides a more structured approach to handling state updates, especially when multiple pieces of state need to be managed together.
+
+## Why Use `useReducer`?
+
+While `useState` is suitable for simple state management, `useReducer` shines in scenarios where state updates involve complex logic or when multiple related states need to be managed cohesively. If you find yourself writing complex `setState` logic or needing to manage state transitions based on various actions, `useReducer` can help organize and simplify your code.
+
+## How `useReducer` Works
+
+### Syntax
+
+```javascript
+useReducer(reducer, initialState)
+```
+
+- **`reducer`**: A function that defines the logic for updating the state. It receives two arguments: the current state and an action, and it returns the new state.
+- **`initialState`**: The initial state value, which can be a simple value or, more commonly, an object containing multiple state variables.
+
+### Return Value
+
+The `useReducer` Hook returns two values:
+
+1. **`state`**: The current state, reflecting the most recent update based on the dispatched action.
+2. **`dispatch`**: A function used to send actions to the reducer, triggering state updates.
+
+### Example Usage
+
+#### 1. Defining the Reducer Function
+
+The reducer function encapsulates the logic for updating the state based on different actions. Here's an example:
+
+```javascript
+function reducer(state, action) {
+  switch (action.type) {
+    case 'increment':
+      return { count: state.count + 1 };
+    case 'decrement':
+      return { count: state.count - 1 };
+    default:
+      return state;
+  }
+}
+```
+
+#### 2. Using `useReducer` in a Component
+
+You can use `useReducer` in a component to manage the state:
+
+```javascript
+import React, { useReducer } from "react";
+
+function Counter() {
+  const initialState = { count: 0 };
+
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  return (
+    <div>
+      <p>Count: {state.count}</p>
+      <button onClick={() => dispatch({ type: 'increment' })}>Increment</button>
+      <button onClick={() => dispatch({ type: 'decrement' })}>Decrement</button>
+    </div>
+  );
+}
+
+export default Counter;
+```
+
+In this example, the `Counter` component uses `useReducer` to manage a `count` state. The `dispatch` function is used to trigger actions that the reducer handles to update the state.
+
+## Benefits of Using `useReducer`
+
+- **Organized State Logic**: `useReducer` centralizes state update logic, making it easier to manage complex state transitions.
+- **Scalability**: It’s well-suited for components that have multiple, interdependent state variables or where the state update logic is complex.
+- **Predictability**: The reducer function’s structure promotes predictable state updates, making debugging and testing easier.
 
