@@ -347,3 +347,126 @@ In this example, the `Counter` component uses `useReducer` to manage a `count` s
 - **Scalability**: It’s well-suited for components that have multiple, interdependent state variables or where the state update logic is complex.
 - **Predictability**: The reducer function’s structure promotes predictable state updates, making debugging and testing easier.
 
+# `useCallback` Hook
+
+## Introduction
+
+The `useCallback` Hook in React is a powerful tool that allows you to return a memoized version of a callback function. Memoization is a technique used to cache a function or value so that it does not need to be recalculated on every render. This can significantly improve the performance of your application, especially when dealing with resource-intensive functions or preventing unnecessary re-renders.
+
+## Why Use `useCallback`?
+
+### 1. Preventing Unnecessary Re-Renders
+
+One common use case for `useCallback` is to prevent a component from re-rendering unless its dependencies have changed. Without `useCallback`, a function inside a component is recreated every time the component re-renders, which can cause child components that depend on that function to re-render unnecessarily.
+
+### 2. Solving Referential Equality Issues
+
+Every time a component re-renders, its functions are recreated. This can cause issues with referential equality, where two function references are considered different even if their logic is identical. This can lead to unwanted re-renders in components that rely on those functions.
+
+## How `useCallback` Works
+
+### Syntax
+
+```javascript
+const memoizedCallback = useCallback(() => {
+  // Your callback logic here
+}, [dependencies]);
+```
+
+- **`callback`**: The function you want to memoize.
+- **`dependencies`**: An array of dependencies that the callback depends on. The callback will only be recalculated if one of these dependencies changes.
+
+### Example Problem: Unnecessary Re-Renders
+
+Consider the following example where a `Todos` component re-renders even when its state hasn't changed:
+
+```javascript
+import React, { useState, memo } from "react";
+
+const Todos = memo(({ todos, addTodo }) => {
+  console.log("Todos component re-rendered");
+  return (
+    <div>
+      <h2>My Todos</h2>
+      {todos.map((todo, index) => (
+        <p key={index}>{todo}</p>
+      ))}
+      <button onClick={addTodo}>Add Todo</button>
+    </div>
+  );
+});
+
+function App() {
+  const [count, setCount] = useState(0);
+  const [todos, setTodos] = useState(["Todo 1", "Todo 2"]);
+
+  const addTodo = () => {
+    setTodos([...todos, `Todo ${todos.length + 1}`]);
+  };
+
+  return (
+    <div>
+      <Todos todos={todos} addTodo={addTodo} />
+      <hr />
+      <div>
+        <h2>Count: {count}</h2>
+        <button onClick={() => setCount(count + 1)}>Increment Count</button>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+In this example, clicking the "Increment Count" button causes the `Todos` component to re-render, even though its state (`todos`) hasn't changed. This happens because the `addTodo` function is recreated on every render, leading to a change in its reference, which causes `Todos` to re-render.
+
+### Solution: Using `useCallback`
+
+To prevent the `Todos` component from re-rendering needlessly, we can use the `useCallback` Hook:
+
+```javascript
+import React, { useState, useCallback, memo } from "react";
+
+const Todos = memo(({ todos, addTodo }) => {
+  console.log("Todos component re-rendered");
+  return (
+    <div>
+      <h2>My Todos</h2>
+      {todos.map((todo, index) => (
+        <p key={index}>{todo}</p>
+      ))}
+      <button onClick={addTodo}>Add Todo</button>
+    </div>
+  );
+});
+
+function App() {
+  const [count, setCount] = useState(0);
+  const [todos, setTodos] = useState(["Todo 1", "Todo 2"]);
+
+  const addTodo = useCallback(() => {
+    setTodos([...todos, `Todo ${todos.length + 1}`]);
+  }, [todos]);
+
+  return (
+    <div>
+      <Todos todos={todos} addTodo={addTodo} />
+      <hr />
+      <div>
+        <h2>Count: {count}</h2>
+        <button onClick={() => setCount(count + 1)}>Increment Count</button>
+      </div>
+    </div>
+  );
+}
+
+export default App;
+```
+
+In this updated example, the `addTodo` function is now wrapped in `useCallback`, meaning it will only be recreated if one of its dependencies (`todos`) changes. As a result, clicking the "Increment Count" button no longer triggers a re-render of the `Todos` component, because the `addTodo` function reference remains the same.
+
+## Conclusion
+
+The `useCallback` Hook is an essential tool for optimizing React applications by preventing unnecessary re-renders and solving issues related to referential equality. By using `useCallback`, you can ensure that functions are only recreated when necessary, leading to more efficient and performant components.
+
