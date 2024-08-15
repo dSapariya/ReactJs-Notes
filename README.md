@@ -479,7 +479,7 @@ Both `useMemo` and `useCallback` are React hooks used to optimize performance by
 - **`useMemo`:** Returns a memoized value.
 - **`useCallback`:** Returns a memoized function.
 
-### `useMemo` Hook
+# `useMemo` Hook
 
 The `useMemo` Hook returns a memoized value, effectively caching the result of an expensive calculation so that it does not need to be recalculated on every render. The hook will only re-run the memoized function when one of its dependencies changes, which can significantly improve performance in certain scenarios.
 
