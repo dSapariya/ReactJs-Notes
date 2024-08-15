@@ -1,4 +1,4 @@
-# React Hooks Overview
+# React Hooks
 
 ## Introduction
 
@@ -16,7 +16,7 @@ There are three fundamental rules for using Hooks in React:
 2. **Call Hooks at the Top Level**: Always use Hooks at the top level of your function component. They should not be called inside loops, conditions, or nested functions.
 3. **Do Not Call Hooks Conditionally**: Hooks should be used unconditionally to ensure that the state and side effects are applied consistently across renders.
 
-# useState Hook
+# `useState` Hook
 
 The `useState` Hook is a built-in React Hook that allows you to manage state in function components.
 
@@ -118,7 +118,7 @@ useEffect(() => {
 
 In this example, the cleanup function clears the timeout to ensure that it doesn’t continue running unnecessarily.
 
-# useContext` Hook
+# `useContext` Hook
 
 ## Introduction
 
